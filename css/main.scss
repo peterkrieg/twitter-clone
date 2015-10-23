@@ -1,2 +1,48 @@
 @import "/codeLib/reset";
+// @import "/codeLib/bourbon/bourbon";
+@import "bootstrap";
+
 @import "styles";
+
+#tweet-controls{
+	display: none;
+}
+
+div.active{
+	textarea{
+		height: 5em;
+	}
+	#tweet-controls{
+		opacity: 1;
+		display: block;
+	}
+}
+
+#char-count.longTweet{
+	color: red;
+}
+
+// the wrapper is just so the icons don't push rest of content and look bad
+div.tweet-actions-wrapper{
+	min-height: 20px;
+	position: relative;
+	top: -10px;
+	// background: red;
+}
+
+div.tweet-actions{
+	display: none;
+	div.tweet:hover &{
+		position: absolute;
+		display: inline;
+		right: 0;
+	}
+}
+
+div.statsreply-wrapper{
+	display: none;
+}
+
+div.tweet:hover{
+	cursor: pointer;
+}
