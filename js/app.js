@@ -55,8 +55,8 @@ $(function(){
 
 	function postTweet(e){
 		console.log(e);
-		alert('what');
-		event.preventDefault();
+		// alert('what');
+		e.preventDefault();
 		// get newTweet text from text in textarea
 		var newTweetText = $writeTweet.val();
 		// then clear text area, reset charcount
@@ -82,9 +82,21 @@ $(function(){
 	//__________________________Clicking Tweet event__________________________
 
 	$('#stream').on('click', '.tweet', function(e){
+		// if()
 		e.preventDefault();
 		$(this).find('.statsreply-wrapper').slideToggle(500);
+	}).on('click', '.tweet-actions, .reply, .stats', function(e){
+		e.stopPropagation();
 	});
+
+
+
+
+
+	// $('#stream').on('click', '.tweet-actions', function(e){
+
+	// });
+
 
 
 

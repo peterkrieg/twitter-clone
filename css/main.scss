@@ -8,6 +8,10 @@
 	display: none;
 }
 
+div#main{
+	margin-bottom: 40px;
+}
+
 div.active{
 	textarea{
 		height: 5em;
@@ -36,6 +40,7 @@ div.tweet-actions{
 		position: absolute;
 		display: inline;
 		right: 0;
+		top: -60px;
 	}
 }
 
@@ -46,3 +51,31 @@ div.statsreply-wrapper{
 div.tweet:hover{
 	cursor: pointer;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
