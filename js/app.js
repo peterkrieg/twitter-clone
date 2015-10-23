@@ -1,4 +1,13 @@
 $(function(){
+	var tweets = [];  // to store tweets, for data persist
+
+	// check first to see if local storage exists, for data persisting
+	// checkLocalStorage();
+
+
+	
+
+
 	// initializing bootstrap tooltips
 	$('[data-toggle="tooltip"]').tooltip();
 
@@ -56,8 +65,9 @@ $(function(){
 	//___________________________Posting Tweet event__________________________
 
 	function postTweet(e){
+		console.log('post tweet');
 		// console.log(e.timeStamp);
-		console.log(e);
+		// console.log(e);
 		// alert('what');
 		e.preventDefault();
 		// get newTweet text from text in textarea
@@ -74,14 +84,41 @@ $(function(){
 		$newTweet.find('.time span').attr('data-livestamp', e.timeStamp/1000);
 		// potential to replace 2 pictures on tweet div
 		$yourPicClone = $yourPic.clone();
-		console.log($yourPicClone);
+		// console.log($yourPicClone);
 		$newTweet.find('.avatar').replaceWith($yourPicClone);
 		// add new tweet, right at start of stream
 		$mainContent.find('#stream').prepend($newTweet);
 		// makes stats visible for 10 seconds, then slide toggles
 		$newTweet.find('.statsreply-wrapper').toggle().delay(10*1000).slideToggle();
 		$newTweet.hide().fadeIn(500);
+
+		// trying to use closures to have updateLocalStorage know scope of newTweetText
+		return updateLocalStorage;
+
+
+
+
+
+
+
+
+
 	}
+
+	function updateLocalStorage(){
+		alert('what');
+		var newTweet = {};
+		newTweet.text = newTweetText;
+		tweets.push(newTweet);
+		console.log(tweets);
+		console.log('helo world');
+		return 'return value';
+	}
+
+	
+
+	// updateLocalStorage();
+
 
 
 	$tweetBtn.on('click', postTweet);
@@ -91,7 +128,7 @@ $(function(){
 	$('body').on('keypress', function(e){
 		if(e.keyCode===13 && $writeTweet.is(':focus')){
 			postTweet(e);
-			console.log('enter pressed');
+			// console.log('enter pressed');
 		}
 	});
 
