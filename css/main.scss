@@ -26,21 +26,20 @@ div.active{
 	color: red;
 }
 
-// the wrapper is just so the icons don't push rest of content and look bad
-div.tweet-actions-wrapper{
-	min-height: 20px;
+div.tweet{
 	position: relative;
-	top: -10px;
-	// background: red;
 }
 
-div.tweet-actions{
+// the wrapper is just so the icons don't push rest of content and look bad
+
+div.tweet-actions-wrapper{
+	min-height: 20px;
+	right: 0;
+	top: 0;
+	position: absolute;
 	display: none;
 	div.tweet:hover &{
-		position: absolute;
 		display: inline;
-		right: 0;
-		top: -60px;
 	}
 }
 

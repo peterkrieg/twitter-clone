@@ -1,5 +1,5 @@
 $(function(){
-	
+
 	// trying to limit number of jQuery searches $(''), read somewhere
 	var $dashboard = $('#dashboard');
 	var $mainContent = $('#main');
@@ -9,7 +9,6 @@ $(function(){
 	var $tweetBtn = $dashboard.find('#tweet-submit');
 	var $yourPic = $dashboard.find('img');
 	var $tweetBlueprint = $mainContent.find('div.tweet:first');
-	console.log($tweetBlueprint);
 
 
 
@@ -54,6 +53,7 @@ $(function(){
 	//___________________________Posting Tweet event__________________________
 
 	function postTweet(e){
+		// console.log(e.timeStamp);
 		console.log(e);
 		// alert('what');
 		e.preventDefault();
@@ -67,11 +67,14 @@ $(function(){
 		// overwrite blueprint new Tweet with tweet text, name, f
 		$newTweet.find('.tweet-text').text(newTweetText);
 		$newTweet.find('.fullname').text(username);
+		// adding timestap to work with live timestamp
+		$newTweet.find('.time span').attr('data-livestamp', e.timeStamp/1000);
 		// potential to replace 2 pictures on tweet div
 		$yourPicClone = $yourPic.clone();
 		$newTweet.find('.avatar').replaceWith($yourPicClone);
 		// add new tweet, right at start of stream
 		$mainContent.find('#stream').prepend($newTweet);
+		$newTweet.find('.statsreply-wrapper').toggle();
 		$newTweet.hide().fadeIn(500);
 	}
 
@@ -82,7 +85,6 @@ $(function(){
 	//__________________________Clicking Tweet event__________________________
 
 	$('#stream').on('click', '.tweet', function(e){
-		// if()
 		e.preventDefault();
 		$(this).find('.statsreply-wrapper').slideToggle(500);
 	}).on('click', '.tweet-actions, .reply, .stats', function(e){
