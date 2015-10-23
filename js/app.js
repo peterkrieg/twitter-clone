@@ -1,4 +1,6 @@
 $(function(){
+	// initializing bootstrap tooltips
+	$('[data-toggle="tooltip"]').tooltip();
 
 	// trying to limit number of jQuery searches $(''), read somewhere
 	var $dashboard = $('#dashboard');
@@ -8,6 +10,7 @@ $(function(){
 	var $charCount = $dashboard.find('#char-count');
 	var $tweetBtn = $dashboard.find('#tweet-submit');
 	var $yourPic = $dashboard.find('img');
+	// console.log($yourPic);
 	var $tweetBlueprint = $mainContent.find('div.tweet:first');
 
 
@@ -71,15 +74,26 @@ $(function(){
 		$newTweet.find('.time span').attr('data-livestamp', e.timeStamp/1000);
 		// potential to replace 2 pictures on tweet div
 		$yourPicClone = $yourPic.clone();
+		console.log($yourPicClone);
 		$newTweet.find('.avatar').replaceWith($yourPicClone);
 		// add new tweet, right at start of stream
 		$mainContent.find('#stream').prepend($newTweet);
-		$newTweet.find('.statsreply-wrapper').toggle();
+		// makes stats visible for 10 seconds, then slide toggles
+		$newTweet.find('.statsreply-wrapper').toggle().delay(10*1000).slideToggle();
 		$newTweet.hide().fadeIn(500);
 	}
 
 
 	$tweetBtn.on('click', postTweet);
+
+	// enter button should submit tweet as well
+
+	$('body').on('keypress', function(e){
+		if(e.keyCode===13 && $writeTweet.is(':focus')){
+			postTweet(e);
+			console.log('enter pressed');
+		}
+	});
 
 
 	//__________________________Clicking Tweet event__________________________
