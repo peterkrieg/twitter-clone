@@ -1,22 +1,10 @@
 $(function(){
-
 	// array that will hold object for each corresponding tweet.  
 	var tweets = [];   
-
-	// console.log(tweets);
-	// var tweetsString = JSON.stringify(tweets);
-	// console.log(tweetsString);
-	// console.log(typeof tweetsString);
-	// tweets.push({tweetName: 'something'});
-	// tweets.push({tweetName: 'something2'});
-	// console.log(tweets);
-	// console.log(Array.isArray(tweets));
-
-
-// initializing bootstrap tooltips
+	// initializing bootstrap tooltips
 	$('[data-toggle="tooltip"]').tooltip();
 
-	// trying to limit number of jQuery searches $(''), read somewhere
+	//__________________________Variables-Tried to minimize jQuery Searches__________________________
 	var $dashboard = $('#dashboard');
 	var $mainContent = $('#main');
 	var username = $dashboard.find('p.username').text();
@@ -29,34 +17,21 @@ $(function(){
 
 
 
-
-
-
-
 	// check first to see if local storage exists, for data persisting
-	// checkLocalStorage();
+	// if no local storage, does nothing
 	if(typeof localStorage.tweets!=='undefined'){
-		console.log('local storage exists');
 		tweets = JSON.parse(localStorage.tweets);
-		console.log(tweets);
 		// attaches them to DOM
 		for(var i=0; i<tweets.length; i++){
 			var currTweet = tweets[i];
-			var $tweetClone = $tweetBlueprint.clone();
-			$tweetClone.find('.tweet-text').text(currTweet.text);
-			$tweetClone.find('.time span').attr('data-livestamp', currTweet.time);
+			var $tweetClone = fillClone(currTweet.text, currTweet.time);
 			$mainContent.find('#stream').prepend($tweetClone);
 		}
+		$('[data-toggle="tooltip"]').tooltip();
 	}
 
 
-	
-
-
-	
-
-
-
+	//__________________________Focus/blur of textarea__________________________
 	$writeTweet.on('focus', function(){
 		$(this).parent().addClass('active');
 		$(this).next().css('opacity', 1);
@@ -70,20 +45,19 @@ $(function(){
 	});
 	
 
-	//____________________________typing event____________________________
-
+	//____________________________typing event on form.  ____________________________
+	// need to use keyup, not keydown, to calculate length of tweet right
+	// keydown/keypress is instant key is pressed down, event happens before length increases
+	// so keydown/keypress always calculate one character too few
 	$writeTweet.on('keyup', function(){
 		var tweetLength = $writeTweet.val().length;
-
 		if(tweetLength>=130){
 			$charCount.addClass('longTweet');
 		}
 		else{
 			$charCount.removeClass('longTweet');
 		}
-
 		// also have maxlength attribute of textarea set to 200
-		// to see alternative way
 		if(tweetLength>140){
 			$charCount.text(0);
 			$tweetBtn.prop('disabled', true);
@@ -94,130 +68,74 @@ $(function(){
 		}
 	});
 
-	//___________________________Posting Tweet event__________________________
+	//__________________________Fill Clone Function__________________________
+	function fillClone(text, time, name, username, imgURL){
+		var $tweetClone = $tweetBlueprint.clone();
+		$tweetClone.find('.tweet-text').text(text);
+		$tweetClone.find('.time span').attr('data-livestamp', time);
+		// $tweetClone.find('strong.fullname').text(name);
+		// $tweetClone.find('strong.username').text(username);
+		// $tweetClone.find('img.avatar').attr('src', imgURL);
+		return $tweetClone;
+	}
+
+	//___________________________Posting Tweet Function__________________________
 
 	function postTweet(e){
-		console.log('post tweet');
-		// console.log(e.timeStamp);
-		// console.log(e);
-		// alert('what');
+		console.log('posted tweet');
 		e.preventDefault();
 		// get newTweet text from text in textarea
 		var newTweetText = $writeTweet.val();
 		// then clear text area, reset charcount
 		$writeTweet.val('');
 		$charCount.text(140);
-		// copy tweet blueprint, to create new tweet
-		var $newTweet = $tweetBlueprint.clone();
-		// overwrite blueprint new Tweet with tweet text, name, f
-		$newTweet.find('.tweet-text').text(newTweetText);
-		$newTweet.find('.fullname').text(username);
 		// adding timestap to work with live timestamp
 		var tweetTimeSec = e.timeStamp/1000;
-		$newTweet.find('.time span').attr('data-livestamp', tweetTimeSec);
-		// potential to replace 2 pictures on tweet div
-		$yourPicClone = $yourPic.clone();
-		// console.log($yourPicClone);
-		$newTweet.find('.avatar').replaceWith($yourPicClone);
-		// add new tweet, right at start of stream
+		// can fill in with picture, username, name, later
+		var $newTweet = fillClone(newTweetText, tweetTimeSec);
 		$mainContent.find('#stream').prepend($newTweet);
-		// makes stats visible for 10 seconds, then slide toggles
-		$newTweet.find('.statsreply-wrapper').toggle().delay(10*1000).slideToggle();
 		$newTweet.hide().fadeIn(500);
 
-		// trying to use closures to have updateLocalStorage know scope of newTweetText
+		// updating local Storage, every time tweet is posted
+		updateLocalStorage(newTweetText, tweetTimeSec);
 
-		// updateLocalStorage(newTweetText, tweetTimeSec);
+		// running bootstrap tooltips again, with new stuff in DOM
+		$('[data-toggle="tooltip"]').tooltip();
+	}
 
-		// updating local storage, tried to do with separate function , but didnt' work..
+	//__________________________Update Local Storage Function__________________________
 
-		var newTweetObj = {
-			text: newTweetText,
-			time: tweetTimeSec
+	function updateLocalStorage(text, time, name, username, imgURL){
+		newTweetObj = {
+			text: text,
+			time: time,
+			name: name,
+			username: username,
+			imgURL: imgURL
 		};
-
-		tweets.push(newTweetObj);  // adds to big array of tweets
-		console.log(tweets);
-		localStorage.tweets = JSON.stringify(tweets); // pushes big array of tweets to local storage, overriding past ones
-
-
-
-
-
-
-
-
-
-
+		tweets.push(newTweetObj);
+		localStorage.tweets = JSON.stringify(tweets);
 	}
 
-	function updateLocalStorage(tweetText, tweetTime){
-		var newTweet = {};
-		console.log(tweetText);
-		console.log(tweetTime);
-		// newTweet.text = tweetText;
-		// newTweet.time = tweetTime;
-		// tweets.push(newTweet);
-		// console.log('new tweet is '+newTweet);
-		// console.log(Array.isArray(newTweet));
-		// console.log('tweets array is currently' +tweets);
-		// tweets.push(newTweet);
-		// console.log(tweets);
-		// console.log('helo world');
-		// console.log('local storage is '+localStorage);
-		// console.log(Array.isArray(localStorage.tweets));
-		// var oldContent = JSON.parse(localStorage.tweets);  // tweets is array of objects
-		// console.log('old content is ' +oldContent);
-		// var newContent = oldContent.push(newTweet);
-		// console.log('new content is '+newContent);
-		// localStorage.tweets = (JSON.stringify(newContent));
-		// return 'return value';
-	}
 
-	
+//__________________________Event Handlers: click tweet button, enter key__________________________
+$tweetBtn.on('click', postTweet);
 
-	// updateLocalStorage();
-
-
-
-	$tweetBtn.on('click', postTweet);
-
-	// enter button should submit tweet as well
-
+	// enter button submits tweet as well
 	$('body').on('keypress', function(e){
+		// if enter key is pressed, and tweet form is in focus
 		if(e.keyCode===13 && $writeTweet.is(':focus')){
 			postTweet(e);
-			// console.log('enter pressed');
 		}
 	});
 
-
-	//__________________________Clicking Tweet event__________________________
-
+	//__________________________Expanding info about Tweet Click__________________________
 	$('#stream').on('click', '.tweet', function(e){
 		e.preventDefault();
-		$(this).find('.statsreply-wrapper').slideToggle(500);
+		$(this).find('.statsreply-wrapper').slideToggle(400);
 	}).on('click', '.tweet-actions, .reply, .stats', function(e){
-		e.stopPropagation();
+		e.stopPropagation(); // need to stop propagation, if click is these elements
 	});
-
-
-
-
-
-	// $('#stream').on('click', '.tweet-actions', function(e){
-
-	// });
-
-
-
-
-
-
-
-
-
-
 
 
 
