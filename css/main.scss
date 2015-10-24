@@ -4,6 +4,10 @@
 
 @import "styles";
 
+
+$twitter-blue: #4099FF;
+
+
 #tweet-controls{
 	display: none;
 }
@@ -51,6 +55,19 @@ div.tweet:hover{
 	cursor: pointer;
 }
 
+button.createRandom{
+	margin: 50px 0 30px 20px;
+	padding: 8px;
+	font-size: 15px;
+	background: $twitter-blue;
+	color: #F2F1EF;
+	@include transition(.3s ease);
+	&:hover{
+		cursor: pointer;
+		background: darken($twitter-blue, 10%);
+		@include transition(1s ease);
+	}
+}
 
 
 
