@@ -1,14 +1,19 @@
 $(function(){
-	var tweets = [];  // to store tweets, for data persist
 
-	// check first to see if local storage exists, for data persisting
-	// checkLocalStorage();
+	// array that will hold object for each corresponding tweet.  
+	var tweets = [];   
+
+	// console.log(tweets);
+	// var tweetsString = JSON.stringify(tweets);
+	// console.log(tweetsString);
+	// console.log(typeof tweetsString);
+	// tweets.push({tweetName: 'something'});
+	// tweets.push({tweetName: 'something2'});
+	// console.log(tweets);
+	// console.log(Array.isArray(tweets));
 
 
-	
-
-
-	// initializing bootstrap tooltips
+// initializing bootstrap tooltips
 	$('[data-toggle="tooltip"]').tooltip();
 
 	// trying to limit number of jQuery searches $(''), read somewhere
@@ -22,6 +27,33 @@ $(function(){
 	// console.log($yourPic);
 	var $tweetBlueprint = $mainContent.find('div.tweet:first');
 
+
+
+
+
+
+
+	// check first to see if local storage exists, for data persisting
+	// checkLocalStorage();
+	if(typeof localStorage.tweets!=='undefined'){
+		console.log('local storage exists');
+		tweets = JSON.parse(localStorage.tweets);
+		console.log(tweets);
+		// attaches them to DOM
+		for(var i=0; i<tweets.length; i++){
+			var currTweet = tweets[i];
+			var $tweetClone = $tweetBlueprint.clone();
+			$tweetClone.find('.tweet-text').text(currTweet.text);
+			$tweetClone.find('.time span').attr('data-livestamp', currTweet.time);
+			$mainContent.find('#stream').prepend($tweetClone);
+		}
+	}
+
+
+	
+
+
+	
 
 
 
@@ -81,7 +113,8 @@ $(function(){
 		$newTweet.find('.tweet-text').text(newTweetText);
 		$newTweet.find('.fullname').text(username);
 		// adding timestap to work with live timestamp
-		$newTweet.find('.time span').attr('data-livestamp', e.timeStamp/1000);
+		var tweetTimeSec = e.timeStamp/1000;
+		$newTweet.find('.time span').attr('data-livestamp', tweetTimeSec);
 		// potential to replace 2 pictures on tweet div
 		$yourPicClone = $yourPic.clone();
 		// console.log($yourPicClone);
@@ -93,7 +126,20 @@ $(function(){
 		$newTweet.hide().fadeIn(500);
 
 		// trying to use closures to have updateLocalStorage know scope of newTweetText
-		return updateLocalStorage;
+
+		// updateLocalStorage(newTweetText, tweetTimeSec);
+
+		// updating local storage, tried to do with separate function , but didnt' work..
+
+		var newTweetObj = {
+			text: newTweetText,
+			time: tweetTimeSec
+		};
+
+		tweets.push(newTweetObj);  // adds to big array of tweets
+		console.log(tweets);
+		localStorage.tweets = JSON.stringify(tweets); // pushes big array of tweets to local storage, overriding past ones
+
 
 
 
@@ -105,14 +151,27 @@ $(function(){
 
 	}
 
-	function updateLocalStorage(){
-		alert('what');
+	function updateLocalStorage(tweetText, tweetTime){
 		var newTweet = {};
-		newTweet.text = newTweetText;
-		tweets.push(newTweet);
-		console.log(tweets);
-		console.log('helo world');
-		return 'return value';
+		console.log(tweetText);
+		console.log(tweetTime);
+		// newTweet.text = tweetText;
+		// newTweet.time = tweetTime;
+		// tweets.push(newTweet);
+		// console.log('new tweet is '+newTweet);
+		// console.log(Array.isArray(newTweet));
+		// console.log('tweets array is currently' +tweets);
+		// tweets.push(newTweet);
+		// console.log(tweets);
+		// console.log('helo world');
+		// console.log('local storage is '+localStorage);
+		// console.log(Array.isArray(localStorage.tweets));
+		// var oldContent = JSON.parse(localStorage.tweets);  // tweets is array of objects
+		// console.log('old content is ' +oldContent);
+		// var newContent = oldContent.push(newTweet);
+		// console.log('new content is '+newContent);
+		// localStorage.tweets = (JSON.stringify(newContent));
+		// return 'return value';
 	}
 
 	
